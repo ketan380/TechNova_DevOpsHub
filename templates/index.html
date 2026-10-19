@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevOpsHub — Developer Tools. Simplified.</title>
+  <meta name="description" content="A modern, containerized Python Flask developer utility dashboard for TechNova Cloud Computing Internship Task 4.">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Custom Dark Navy Theme -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar-custom">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <a href="#overview" class="brand-wrapper" aria-label="DevOpsHub Home">
+        <div class="brand-logo-badge">DH</div>
+        <div>
+          <div class="brand-title">DevOpsHub</div>
+          <div class="brand-tagline-nav">Developer Tools. Simplified.</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="d-none d-lg-flex align-items-center gap-2">
+        <a href="#overview" class="nav-link-custom active"><i class="bi bi-grid-fill"></i> Overview</a>
+        <a href="#text-utility" class="nav-link-custom"><i class="bi bi-fonts"></i> Text Utility</a>
+        <a href="#json-formatter" class="nav-link-custom"><i class="bi bi-braces"></i> JSON Formatter</a>
+        <a href="#system-health" class="nav-link-custom"><i class="bi bi-activity"></i> System Health</a>
+        <a href="#api-docs" class="nav-link-custom"><i class="bi bi-code-slash"></i> REST API</a>
+      </div>
+
+      <!-- Live Connectivity Status -->
+      <div class="d-flex align-items-center gap-3">
+        <div id="health-status-badge" class="status-pill healthy" title="Flask Backend Operational">
+          <span class="pulse-dot"></span> Backend Active
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Header & Overview -->
+  <header id="overview" class="hero-section text-center">
+    <div class="container">
+      <div class="badge-technova">
+        <i class="bi bi-cloud-check-fill"></i> TechNova Cloud Computing Internship &bull; Task 4: Docker Containerization
+      </div>
+      <h1 class="hero-title">DevOpsHub</h1>
+      <p class="hero-subtitle">
+        A production-grade developer utility platform and REST API engine. Built with Python 3.12, Flask, Gunicorn, and Docker containerization.
+      </p>
+
+      <!-- Key Metrics Summary Grid -->
+      <div class="metrics-grid text-start">
+        <div class="summary-card">
+          <div class="card-label">Application Status <i class="bi bi-heart-pulse text-success"></i></div>
+          <div class="card-value text-success">Healthy</div>
+          <div class="card-subtext"><i class="bi bi-check-circle"></i> HTTP 200 /api/health</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="card-label">Python Runtime <i class="bi bi-filetype-py text-primary"></i></div>
+          <div class="card-value">{{ info.python_version }}</div>
+          <div class="card-subtext"><i class="bi bi-cpu"></i> {{ info.platform }}</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="card-label">Deployment Mode <i class="bi bi-box-seam text-info"></i></div>
+          <div class="card-value" style="font-size: 1.15rem; word-break: break-word;">{{ info.deployment_environment }}</div>
+          <div class="card-subtext">
+            {% if info.containerized %}
+            <i class="bi bi-check2-all text-success"></i> Container Verified (/.dockerenv)
+            {% else %}
+            <i class="bi bi-laptop text-warning"></i> Running on Host System
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <div class="card-label">WSGI Server Engine <i class="bi bi-hdd-network text-cyan"></i></div>
+          <div class="card-value">{{ info.wsgi_server }}</div>
+          <div class="card-subtext"><i class="bi bi-shield-check"></i> Non-root Container Port 5000</div>
+        </div>
+      </div>
+
+      <!-- Tech Stack Badges -->
+      <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+        <span class="tech-tag"><i class="bi bi-filetype-py"></i> Python 3.12</span>
+        <span class="tech-tag"><i class="bi bi-diagram-3"></i> Flask 3.0</span>
+        <span class="tech-tag"><i class="bi bi-box"></i> Docker</span>
+        <span class="tech-tag"><i class="bi bi-server"></i> Gunicorn WSGI</span>
+        <span class="tech-tag"><i class="bi bi-stack"></i> Docker Compose</span>
+        <span class="tech-tag"><i class="bi bi-check2-square"></i> Pytest Suite</span>
+        <span class="tech-tag"><i class="bi bi-bootstrap"></i> Bootstrap 5 & CSS3</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="app-container">
+
+    <!-- Section B: Text Utility Tool -->
+    <section id="text-utility" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="bi bi-fonts"></i> Text Processing Utility</h2>
+          <p class="section-desc">Format, transform, and calculate real-time linguistic metrics for developer documentation, code comments, and payload data.</p>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <label for="text-input" class="form-label-custom">
+          <span>Source Text Input</span>
+          <span class="text-dim font-monospace" style="font-size: 0.75rem;">UTF-8 plain text</span>
+        </label>
+        <textarea id="text-input" class="textarea-custom" placeholder="Type or paste your text here to analyze character counts, transform cases, or clean whitespace..." rows="6" aria-describedby="text-metrics-hint"></textarea>
+        <div id="text-metrics-hint" class="visually-hidden">Text metrics and transformation workspace</div>
+
+        <!-- Real-time Stats Grid -->
+        <div class="tool-stats-grid">
+          <div class="stat-item">
+            <div class="stat-label">Words</div>
+            <div id="stat-words" class="stat-val">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Characters</div>
+            <div id="stat-chars" class="stat-val">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">No Spaces</div>
+            <div id="stat-chars-nospace" class="stat-val">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Lines</div>
+            <div id="stat-lines" class="stat-val">0</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Byte Size</div>
+            <div id="stat-bytes" class="stat-val">0 B</div>
+          </div>
+        </div>
+
+        <!-- Action Toolbar -->
+        <div class="toolbar-actions">
+          <button id="btn-uppercase" type="button" class="btn-custom btn-secondary-custom">
+            <i class="bi bi-type-h1"></i> UPPERCASE
+          </button>
+          <button id="btn-lowercase" type="button" class="btn-custom btn-secondary-custom">
+            <i class="bi bi-type"></i> lowercase
+          </button>
+          <button id="btn-whitespace" type="button" class="btn-custom btn-secondary-custom">
+            <i class="bi bi-distribute-horizontal"></i> Remove Extra Whitespace
+          </button>
+          <button id="btn-copy-text" type="button" class="btn-custom btn-outline-custom">
+            <i class="bi bi-clipboard"></i> Copy Text
+          </button>
+          <button id="btn-clear-text" type="button" class="btn-custom btn-danger-custom">
+            <i class="bi bi-trash3"></i> Clear
+          </button>
+          <div class="ms-auto">
+            <button id="btn-analyze-api" type="button" class="btn-custom btn-primary-custom">
+              <i class="bi bi-cpu"></i> Analyze via Flask API
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section C: JSON Formatter and Validator -->
+    <section id="json-formatter" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="bi bi-braces"></i> JSON Formatter & Validator</h2>
+          <p class="section-desc">Verify JSON syntax, format with adjustable indentation, minify payloads, and inspect precise syntax error positions.</p>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+          <label for="json-input" class="form-label-custom mb-0">JSON Payload Editor</label>
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-dim" style="font-size: 0.8rem;">Indent:</span>
+            <select id="json-indent" class="form-select form-select-sm bg-dark text-light border-secondary" style="width: auto;" aria-label="JSON Indentation">
+              <option value="2" selected>2 Spaces</option>
+              <option value="4">4 Spaces</option>
+            </select>
+            <button id="btn-sample-valid" type="button" class="btn-custom btn-outline-custom py-1 px-2" style="font-size: 0.75rem;">
+              <i class="bi bi-check2"></i> Load Valid Sample
+            </button>
+            <button id="btn-sample-invalid" type="button" class="btn-custom btn-outline-custom py-1 px-2" style="font-size: 0.75rem;">
+              <i class="bi bi-bug"></i> Load Broken Sample
+            </button>
+          </div>
+        </div>
+
+        <textarea id="json-input" class="textarea-custom code-font" placeholder='Paste your JSON object or array here, e.g. {"service": "Docker", "version": 1.0}...' rows="8"></textarea>
+
+        <!-- Validation Alert Feedback -->
+        <div id="json-alert-container"></div>
+
+        <!-- Formatted Output Section -->
+        <div id="json-output-wrapper" class="output-box-wrapper" style="display: none;">
+          <div class="output-header">
+            <span id="json-output-meta">Formatted Output</span>
+            <button id="btn-copy-json" type="button" class="btn-custom btn-outline-custom py-0 px-2" style="font-size: 0.75rem;">
+              <i class="bi bi-clipboard"></i> Copy Formatted
+            </button>
+          </div>
+          <pre id="json-output-code" class="output-code mb-0"></pre>
+        </div>
+
+        <!-- Actions Toolbar -->
+        <div class="toolbar-actions">
+          <button id="btn-format-json" type="button" class="btn-custom btn-primary-custom">
+            <i class="bi bi-check2-circle"></i> Format & Validate
+          </button>
+          <button id="btn-minify-json" type="button" class="btn-custom btn-secondary-custom">
+            <i class="bi bi-arrows-angle-contract"></i> Minify JSON
+          </button>
+          <button id="btn-clear-json" type="button" class="btn-custom btn-danger-custom">
+            <i class="bi bi-trash3"></i> Clear Editor
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section D: System & Application Health -->
+    <section id="system-health" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="bi bi-activity"></i> System & Application Health</h2>
+          <p class="section-desc">Live runtime telemetry, container detection diagnostics, and server synchronization details.</p>
+        </div>
+        <div>
+          <button id="btn-refresh-health" type="button" class="btn-custom btn-outline-custom">
+            <i class="bi bi-arrow-clockwise"></i> Refresh Live Health
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="tool-card h-100">
+            <h3 class="h6 text-white mb-3"><i class="bi bi-cpu text-primary"></i> Application Specifications</h3>
+            <table class="system-info-table">
+              <tbody>
+                <tr>
+                  <td class="prop-name">Application Name</td>
+                  <td class="prop-value">{{ info.app_name }}</td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Version</td>
+                  <td class="prop-value">v{{ info.version }}</td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Python Engine</td>
+                  <td class="prop-value">{{ info.python_version }}</td>
+                </tr>
+                <tr>
+                  <td class="prop-name">WSGI Runtime</td>
+                  <td class="prop-value">{{ info.wsgi_server }}</td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Host System</td>
+                  <td class="prop-value">{{ info.system }} ({{ info.hostname }})</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="tool-card h-100">
+            <h3 class="h6 text-white mb-3"><i class="bi bi-box-seam text-info"></i> Containerization & Telemetry</h3>
+            <table class="system-info-table">
+              <tbody>
+                <tr>
+                  <td class="prop-name">Container Status</td>
+                  <td class="prop-value">
+                    {% if info.containerized %}
+                    <span class="badge bg-success">Dockerized Container</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Host Process (Non-containerized)</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Container Detection</td>
+                  <td class="prop-value" style="font-size: 0.8rem; color: var(--text-muted);">
+                    Evaluates <code>/.dockerenv</code> & <code>/proc/1/cgroup</code> markers.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Process Uptime</td>
+                  <td class="prop-value" id="uptime-metric">{{ info.uptime_seconds }}s</td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Server UTC Time</td>
+                  <td class="prop-value" id="server-time-metric">{{ info.utc_time }}</td>
+                </tr>
+                <tr>
+                  <td class="prop-name">Security Policy</td>
+                  <td class="prop-value">Non-root User (UID 10001), 2MB Payload Cap</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section E: REST API Documentation & Live Tester -->
+    <section id="api-docs" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="bi bi-code-slash"></i> REST API Documentation</h2>
+          <p class="section-desc">Production-grade JSON endpoints with standardized HTTP status codes, structured error payloads, and interactive testing.</p>
+        </div>
+      </div>
+
+      <!-- Endpoint 1: Health -->
+      <div class="api-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="api-endpoint-badge badge-method-get">
+            <span>GET</span> /api/health
+          </div>
+          <button type="button" class="btn-custom btn-outline-custom btn-test-api py-1 px-3" data-endpoint="/api/health" data-method="GET">
+            <i class="bi bi-play-fill"></i> Test Endpoint
+          </button>
+        </div>
+        <div class="api-desc">Returns service health status, application version, uptime, and UTC server timestamp.</div>
+        <div class="code-snippet">curl -X GET http://localhost:5000/api/health</div>
+      </div>
+
+      <!-- Endpoint 2: Info -->
+      <div class="api-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="api-endpoint-badge badge-method-get">
+            <span>GET</span> /api/info
+          </div>
+          <button type="button" class="btn-custom btn-outline-custom btn-test-api py-1 px-3" data-endpoint="/api/info" data-method="GET">
+            <i class="bi bi-play-fill"></i> Test Endpoint
+          </button>
+        </div>
+        <div class="api-desc">Returns detailed system metadata, Python version, platform specs, and registered endpoints.</div>
+        <div class="code-snippet">curl -X GET http://localhost:5000/api/info</div>
+      </div>
+
+      <!-- Endpoint 3: Text Analyze -->
+      <div class="api-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="api-endpoint-badge badge-method-post">
+            <span>POST</span> /api/text/analyze
+          </div>
+          <button type="button" class="btn-custom btn-outline-custom btn-test-api py-1 px-3" data-endpoint="/api/text/analyze" data-method="POST">
+            <i class="bi bi-play-fill"></i> Test Endpoint
+          </button>
+        </div>
+        <div class="api-desc">Analyzes text payloads and returns words, character counts (with/without space), lines, paragraphs, and byte size.</div>
+        <div class="code-snippet">curl -X POST http://localhost:5000/api/text/analyze -H "Content-Type: application/json" -d '{"text": "DevOpsHub Docker Container"}'</div>
+      </div>
+
+      <!-- Endpoint 4: JSON Validate -->
+      <div class="api-card">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="api-endpoint-badge badge-method-post">
+            <span>POST</span> /api/json/validate
+          </div>
+          <button type="button" class="btn-custom btn-outline-custom btn-test-api py-1 px-3" data-endpoint="/api/json/validate" data-method="POST">
+            <i class="bi bi-play-fill"></i> Test Endpoint
+          </button>
+        </div>
+        <div class="api-desc">Validates JSON syntax, formats with custom indentation, and returns precise error diagnostics for invalid inputs.</div>
+        <div class="code-snippet">curl -X POST http://localhost:5000/api/json/validate -H "Content-Type: application/json" -d '{"json_string": "{\"app\": \"DevOpsHub\"}", "indent": 2}'</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Live API Response Modal -->
+  <div class="modal fade" id="apiTestModal" tabindex="-1" aria-labelledby="api-test-endpoint-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content bg-dark text-light border-secondary">
+        <div class="modal-header border-secondary">
+          <h5 class="modal-title font-monospace" id="api-test-endpoint-title">Live API Call</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-dim font-monospace" style="font-size: 0.8rem;">Response Status:</span>
+            <div id="api-test-status"></div>
+          </div>
+          <pre id="api-test-output" class="p-3 rounded bg-black text-light font-monospace border border-secondary" style="max-height: 380px; overflow-y: auto; font-size: 0.85rem;"></pre>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Footer -->
+  <footer class="footer-custom">
+    <div class="footer-content">
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <strong class="text-white">DevOpsHub</strong> &mdash; <span>Developer Tools. Simplified.</span>
+        </div>
+        <p class="mb-1 text-dim" style="font-size: 0.8rem;">
+          Developed for <strong>TechNova Cloud Computing Internship Task 4: Docker Containerization</strong>.
+        </p>
+        <p class="mb-0 text-dim" style="font-size: 0.75rem;">
+          Production-grade architecture with Gunicorn WSGI, Dockerfile non-root security, Docker Compose, and Pytest.
+        </p>
+      </div>
+
+      <div class="text-md-end">
+        <div class="text-muted" style="font-size: 0.78rem;">Recommended Repository:</div>
+        <code class="text-info font-monospace">TechNova_DevOpsHub</code>
+        <div class="text-dim mt-2" style="font-size: 0.75rem;">
+          &copy; 2026 DevOpsHub &bull; TechNova Internship
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JavaScript Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <!-- Application Client Logic -->
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

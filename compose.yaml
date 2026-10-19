@@ -1,0 +1,26 @@
+# ==============================================================================
+# DevOpsHub - Docker Compose Specification
+# TechNova Cloud Computing Internship Task 4: Docker Containerization
+# Convenient single-command local multi-platform container orchestration.
+# ==============================================================================
+
+services:
+  devopshub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devopshub:1.0
+    container_name: devopshub_app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PORT=5000
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

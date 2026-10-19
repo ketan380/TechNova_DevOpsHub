@@ -1,0 +1,38 @@
+# Git metadata
+.git/
+.gitignore
+
+# Python virtual environments & packages
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Testing & build artifacts
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment files and credentials
+.env
+.env.*
+*.local
+
+# IDEs & Editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker files
+Dockerfile
+compose.yaml
+compose.override.yaml
+.dockerignore
+
+# Documentation (kept in repo, not needed inside runtime container)
+README.md
