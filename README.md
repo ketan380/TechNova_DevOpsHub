@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DevOpsHub
 
 > **Developer Tools. Simplified.**  
@@ -541,3 +542,6 @@ Through completing this project, the following cloud computing and DevOps compet
 This project was developed for the **TechNova Cloud Computing Internship — Task 4: Docker Containerization**.
 
 *Special thanks to the TechNova mentors and team for the project guidelines and technical curriculum.*
+=======
+# TechNova_DevOpsHub
+>>>>>>> e383fca6f392be057a8059eff21e3187e216725c
